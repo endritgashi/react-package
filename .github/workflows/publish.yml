@@ -19,14 +19,17 @@ jobs:
           node-version: 19
           registry-url: https://npm.pkg.github.com/
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
       - name: Authenticate with GitHub Packages
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Apply changeset version
-        run: npx changeset version
+        run: pnpm changeset version
 
       - name: Commit version bump
         run: |
@@ -37,9 +40,9 @@ jobs:
           git push
 
       - name: Build the package
-        run: npm run build
+        run: pnpm build
 
       - name: Publish to GitHub Packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        run: npx changeset publish
+        run: pnpm changeset publish
