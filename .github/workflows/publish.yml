@@ -25,10 +25,21 @@ jobs:
       - name: Authenticate with GitHub Packages
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
 
+      - name: Apply changeset version
+        run: npx changeset version
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "ci: version bump by Changesets" || echo "No changes to commit"
+          git push
+
       - name: Build the package
         run: npm run build
 
       - name: Publish to GitHub Packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        run: npm publish
+        run: npx changeset publish
