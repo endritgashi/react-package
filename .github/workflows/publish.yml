@@ -6,8 +6,7 @@ on:
       - main
 
 jobs:
-  release:
-    name: Release
+  publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,17 +17,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 19
-          registry-url: https://registry.npmjs.org/
+          registry-url: https://npm.pkg.github.com/
 
       - name: Install dependencies
         run: npm install
 
-      - name: Create a release version
-        run: npx changeset version
+      - name: Authenticate with GitHub Packages
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
 
-      - name: Publish package
+      - name: Build the package
+        run: npm run build
+
+      - name: Publish to GitHub Packages
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm run build
-          npx changeset publish
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        run: npm publish
