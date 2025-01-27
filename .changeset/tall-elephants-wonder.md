@@ -1,5 +1,0 @@
----
-"react-package": patch
----
-
-test
