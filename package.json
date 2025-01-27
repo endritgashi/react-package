@@ -1,6 +1,6 @@
 {
   "name": "@endritgashi/react-package",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "dist/my-react-package.cjs.js",
   "module": "dist/my-react-package.esm.js",
   "types": "dist/index.d.ts",
